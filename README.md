@@ -1,1 +1,1 @@
-Appunti di git con i commandi usati più frequentemente.
+Appunti di git con i comandi usati più frequentemente.
