@@ -1,0 +1,619 @@
+--------------------------------------------------------------------------------------------
+Configurazione iniziale
+--------------------------------------------------------------------------------------------
+# apre file di configurazione
+git config --global --edit
+
+# mostra impostazioni e posizione del file di configurazione
+git config --list --show-origin
+# file:C:/Users/Alessandro/.gitconfig     user.name=axxel1982
+# file:C:/Users/Alessandro/.gitconfig     user.email=94049202+axxel1982@users.noreply.github.com
+
+# impostare nome ed email
+git config --global user.name "John Doe"
+git config --global user.email johndoe@example.com
+# per impostazioni relative ad uno specifico progetto non mettere global
+
+# controllare un valore di configurazione
+git config user.name
+
+# vedere il valore dell'impostazione e la posizione nel file system
+git config --show-origin user.name
+# nel caso di voci doppie nei files di configurazione controlla quale ha il sopravvento
+
+# aggiorna git su Windows
+git update-git-for-windows
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Creazione di un repository
+--------------------------------------------------------------------------------------------
+# inizializza repository
+git init
+
+# clona un repository
+git clone https://github.com/w3schools-test/w3schools-test.github.io.git
+
+# clona un repository nella cartella myfolder
+git clone https://github.com/w3schools-test/w3schools-test.github.io.git myfolder
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+git status - Controllare lo status dei file
+--------------------------------------------------------------------------------------------
+# status repository
+git status
+
+# status repository in forma compatta
+git status --short
+#oppure
+git status -s
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Visualizzare aiuto in linea
+--------------------------------------------------------------------------------------------
+# aiuto veloce
+git add -h
+
+# pagina del manuale
+git help add
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+git add - Aggiungere file allo stage
+--------------------------------------------------------------------------------------------
+
+# aggiunge il file allo Staging Environment
+git add index.html
+
+# aggiunge tutti i file della cartella corrente allo Staging Environment
+git add *
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Esempio di file .gitignore
+--------------------------------------------------------------------------------------------
+# ignore all .a files
+*.a
+
+# but do track lib.a, even though you're ignoring .a files above
+!lib.a
+
+# only ignore the TODO file in the current directory, not subdir/TODO
+/TODO
+
+# ignore all files in any directory named build
+build/
+
+# ignore doc/notes.txt, but not doc/server/arch.txt
+doc/*.txt
+
+# ignore all .pdf files in the doc/ directory and any of its subdirectories
+doc/**/*.pdf
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Rimuovere un file dallo stage
+--------------------------------------------------------------------------------------------
+# unstage di un file con reset
+git reset <file>
+
+# indicando disambiguazione "git reset -- <file>"
+
+# unstage di tutti i file nell'index
+git reset
+
+# unstage di un file  con restore
+git restore --staged <file>
+
+#elimina un file dallo staging 
+git rm --cached <nomedelfile>
+
+# elimina un file dallo staging e dalla working directory
+git rm -f dacanc.txt
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Riportare un file allo stato di un commit o dell'index
+--------------------------------------------------------------------------------------------
+# struttura di checkout
+git checkout [<options>] [<commit>] -- <file>
+
+# se viene fornito il parametro <commit> cambia anche l'index
+
+# ripristina il file com'è nell'index
+git checkout -- file.txt
+
+# ripristina il file allo stato dell'ultimo commit
+git checkout HEAD file.txt
+
+# ripristina tutti i file allo stato dell'ultimo commit
+git checkout HEAD . 
+
+# ripristina il file com'è nel penultimo commit
+git checkout HEAD~1 file.txt. 
+
+# ripristina il file com'è nel commit specificato
+git checkout 8a7b201 file.txt 
+
+# ripristina il file com'è nell'index
+git restore <file>
+
+# ripristina il file com'è nell'ultimo commit
+git restore --source HEAD <file>
+
+# ripristina una specifica revisione del file
+git restore --source 7173808e index.html
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+git commit - Salvare cambiamenti nel repository
+--------------------------------------------------------------------------------------------
+# esegue il commit dei file presenti nello Staging Environment
+git commit -m "Prima Release"
+
+# esegue il commit direttamente senza passare dalla fase di staging
+git commit -a -m "Aggiunta una linea"
+--------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------
+git commit --amend - Modificare l'ultimo commit
+--------------------------------------------------------------------------------------------
+# cambia il commento dell'ultimo commit
+git commit --amend -m "testo modificato"
+
+# per modificare l'ultimo commit (caricando le modifiche che sono nello staging)
+git commit --amend
+
+# esempio di modifica dell'ultimo commit
+git commit -m 'Initial commit'
+git add forgotten_file
+git commit --amend
+
+# per modificare l'ultimo commit senza editare il nome
+git commit --amend --no-edit
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+git reset - Come annullare un commit
+--------------------------------------------------------------------------------------------
+
+#Se ancora non è stato stato eseguito il push verso un repo remoto si può usare git reset.
+
+# il branch corrente punta al commit indicato, non modifica index e working directory
+git reset --soft 19e1c37
+
+# il branch corrente punta al commit indicato, l'index viene modificato, 
+# ma non la working directory (comportamento di default).
+git reset --mixed 19e1c37
+
+# il branch corrente punta al commit indicato, modifica anche index e working directory 
+git reset --hard 19e1c37
+
+# annulla l'ultimo commit
+git reset --hard HEAD~
+
+# annulla ultimi 2 commit
+git reset --hard HEAD~2
+
+# il comando "git commit" dopo un soft reset al penultimo commit, ha lo stesso effetto 
+# di "git commit --amend"
+git reset --soft HEAD~
+git commit
+
+# Se la commit è già stata inviata a un repository remoto (push) è necessario revert
+# Questo comando crea una _nuova commit_ che annulla tutto ciò che è stato introdotto dalla 
+# commit indesiderata.
+git revert HEAD
+
+# In Git HEAD è un puntatore alla commit più recente fatta sul branch.
+
+# In alternativa è possibile indicare l’SHA-1 dell’hash della commit che si vuole annullare:
+git revert 4080e9c
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+git reset - Utilizzo su file
+--------------------------------------------------------------------------------------------
+# struttura del comando reset 
+git reset <commit> -- <path>
+
+# il parametro commit è opzionale, se non specificato è uguale ad HEAD
+# il comando resetta l'index del file allo stato relativo al commit specificato (HEAD se non è
+# specificato)
+# -- sono inserite per argument disambiguation
+
+# rimuove dallo stage il file (inserisce il file.txt dell'ultimo commit nell'index)
+git reset -- file.txt
+
+# copia la versione del file relativa al commit indicato nell'index
+git reset eb43bf file.txt
+
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+git diff - Visualizzare cambiamenti tra commits, trees, etc.
+--------------------------------------------------------------------------------------------
+# mostra le differenze tra stage e working directory
+git diff
+
+# mostra le differenze tra HEAD e stage
+git diff --staged
+
+# mostra le differenze tra HEAD e working directory
+git diff HEAD
+
+# mostra la differenza tra il branch locale ed origin/master
+git diff origin/master
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+git log - Visualizzare la commit history
+--------------------------------------------------------------------------------------------
+# per vedere history dei commits
+git log
+
+#mostra log compatto con hash dei commit
+git log --oneline
+
+# log del branch su github
+git log origin/master
+
+# mostra le differenze (patch output) introdotte nei commit
+git log -p
+
+# mostra gli ultimi n commit
+git log -n
+
+# mostra commits con statistiche
+git log --stat
+
+# mostra grafico dei branch e dei merge
+git log --graph
+
+# grafico complessivo dei branch e dei merge compatto
+git log --oneline --decorate --graph --all
+
+# log delle ultime 2 settimane
+git log --since=2.weeks
+
+# log a partire da una data
+git log --since="2008-10-01"
+
+# log prima di una data
+git log --before="2008-11-01"
+
+# mostra log dei commit che riguardano file o cartelle
+git log -- path/to/file
+
+# elenco dei commit che hanno modificato una stringa particolare
+git log -S function_name
+
+# mostra commit con ricerca sui messaggi
+git log --grep "modifica"
+
+# log con stringa di formattazione
+git log --pretty=format:"%h - %an, %ar : %s"
+
+# per andare alla fine del log
+SHIFT + g
+
+# per uscire dal log
+q
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Repository remoti
+--------------------------------------------------------------------------------------------
+# mostra repository remoti con URL
+git remote -v
+
+# aggiungere un repository remoto
+git remote add <shortname> <url>
+
+# collega il repository locale ad un repository remoto su github
+git remote add origin https://github.com/axxel1982/prova-5-maggio.git
+
+# scarica i dati dal repository remoto a quello locale, senza eseguire il merge 
+git fetch <remote>
+
+# scarica i dati dal repository remoto a quello locale ed esegue il merge (fetch + merge)
+git pull origin
+
+# fa il merge nel branch corrente del branch remoto next
+git pull origin next
+
+# il comando "git pull origin next" è uguale all'esecuzione dei seguenti:
+git fetch origin
+git merge origin/next
+
+# push del branch locale al server remoto
+git push <remote> <branch>
+
+# push del master branch locale al server origin
+git push origin master
+
+# push del branch master su origin ed imposta il repository remoto origin come upstream
+git push --set-upstream origin master
+
+# push del branch corrente su github (funziona dopo aver eseguito il comando precedente) 
+git push
+
+# informazioni su un server remoto
+git remote show <remote>
+
+# elenca i riferimenti di un repository remoto
+git help ls-remote
+
+# informazioni sul server remoto origin
+git remote show origin
+
+# rinomina origin in upstream
+git remote rename origin upstream
+# per convenzione il nostro fork si chiama origin, mentre quello che abbiamo forkato upstream (è solo in lettura)
+
+# rimuove un repository remoto
+git remote remove ale
+
+# imposta il branch locale esattamente con il remote branch
+git fetch origin
+git reset --hard origin/master
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Tagging - git tag
+--------------------------------------------------------------------------------------------
+# elenco dei tag
+git tag
+
+# elenco di tang con wildcard pattern
+git tag -l "v1.8.5*"
+
+# crea un lightweight tag
+git tag v1.5-lw
+
+# crea un annotated tag (contiene informazioni extra ed è un oggetto)
+git tag -a v1.4 -m "my version 1.4"
+
+# mostra informazioni sul tag e commit relativo
+git show v1.4
+
+# taggare un commit specifico
+git tag -a v1.2 9fceb02
+
+# invia tag al server
+git push origin <tagname>
+
+# invia tag 1.4 al server
+git push origin v1.4
+
+# invia tutti i tag al server origin
+git push origin --tags
+
+# cancellare un tag da locale
+git tag -d <tagname>
+
+# cancellare tag 1.4-lw
+git tag -d v1.4-lw
+
+# cancellare un tag su remoto
+git push origin --delete <tagname>
+
+# visiona versioni dei file a cui punta il tag (detached HEAD state)
+git checkout v2.0.0
+
+# crea e switcha un nuovo branch "version2" a partire dai file taggati "v2.0.0"
+git checkout -b version2 v2.0.0
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Creare alias
+--------------------------------------------------------------------------------------------
+# crea alias "unstage" che esegue comando 'reset HEAD --'
+git config --global alias.unstage 'reset HEAD --'
+
+# equivalenza tra alias e comando completo
+# git unstage fileA
+# git reset HEAD -- fileA
+
+# alias per mostrare log dell'ultimo commitG
+git config --global alias.last 'log -1 HEAD'
+
+# utilizzo :
+git last
+
+# alias per eseguire un comando esterno
+git config --global alias.visual '!gitk
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+Gestione dei branch
+--------------------------------------------------------------------------------------------
+# Definizione di branch:
+# Un branch è un file che contiene il checksum SHA-1 di 40 caratteri del commit a cui punta.
+# Creare un nuovo branch significa scrivere 41 bytes in un file (40 caratteri + newline).
+
+# Definizione di HEAD:
+# Puntatore al branch corrente.
+
+# crea un nuovo branch
+git branch hello-world-images
+
+# visualizza i branch
+git branch
+
+# mostra tutti branch compresi quelli remoti
+git branch -a
+
+# mostra l'ultimo commit di ogni branch
+git branch -v
+
+# mostra i branches merged nel branch corrente
+git branch --merged
+
+# mostra i branches non merged nel branch corrente
+git branch --no-merged
+
+# cambia branch
+git checkout hello-world-images
+
+# cambia branch e se non esiste lo crea
+git checkout -b emergency-fix
+
+# fa il merge del branch corrente con emergency-fix
+git merge emergency-fix
+
+# elimina il branch
+git branch -d emergency-fix
+
+# scarica i branches dal repository remoto
+git fetch origin
+
+# combina il branch corrente con origin/master
+git merge origin/master
+
+# salvare il branch corrente in un altro branch di backup
+git commit -a -m "Saving my work, just in case"
+git branch my-saved-work
+
+# per esaminare il commit specificato, nessun branch è selezionato
+git checkout 0d1d7fc32
+
+# crea un nuovo branch a partire da un commit
+git checkout -b old-state 0d1d7fc32
+
+# rinominare un branch localmente
+git branch --move bad-branch-name corrected-branch-name
+
+# push del branch rinominato su remoto
+git push --set-upstream origin corrected-branch-name
+
+# elimina da remoto il branch con il vecchio nome
+git push origin --delete bad-branch-name
+
+# Un tracking branch è un branch locale che ha un collegamento diretto ad un branch remoto.
+# Se siamo in un tracking branch, "git pull" esegue il fetch da remoto ed il merge locale
+# dei relativi branch.
+
+# creare un tracking branch di un branch remoto
+git checkout -b <branch> <remote>/<branch>
+
+# creare un branch locale serverfix collegato al branch remoto origin/serverfix
+git checkout -b serverfix origin/serverfix
+
+# scorciatoia del comando sopra
+git checkout --track origin/serverfix
+
+# scorciatoia del comando superiore (funziona se serverfix non esiste localmente e
+corrisponde ad un branch su remoto)
+git checkout serverfix
+
+# imposta il branch serverfix come tracking branch del branch remoto origin/serverfix
+git branch -u origin/serverfix
+oppure
+git branch --set-upstream-to origin/serverfix
+
+# shorthand per l'upstream branch
+git merge @{u}
+equivale a:
+git merge origin/master
+(se siamo sul master branch collegato a origin/master)
+
+# informazioni sui tracking branch
+git branch -vv
+
+# ottenere gli aggiornamenti da tutti i branch da tutti i repository remoti
+git fetch --all
+
+# eliminare un branch remoto
+git push origin --delete serverfix
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+git rebase
+--------------------------------------------------------------------------------------------
+# Definizione di merge:
+# merge esegue un three-way-merge tra gli snapshot più recenti dei due branch ed il più
+# recente antenato comune, creando un nuovo snapshot (e commit).
+
+# Definizione di rebase:
+# rebase prende tutti i cambiamenti committati in un branch e li applica ad un altro branch.
+# Facendo riferimento all'antenato comune dei due branch (quello attuale e quello su cui 
+# stiamo facendo il rebasing), ottiene le diff introdotte da ogni commit sul branch in cui 
+# siamo, salva queste diff su file temporanei, resetta il branch corrente allo stesso commit 
+# del branch su cui stiamo facendo il rebasing, alla fine applica ogni cambiamento in sequenza.
+
+# esempio: rebase di experiment su master branch
+git checkout experiment
+git rebase master
+git checkout master
+git merge experiment
+
+# il risultato di merge e rebase è lo stesso, ma la history di rebase è più lineare e 
+# comprensibile. Inoltre collaborando ad un progetto che non manteniamo, lavoriamo su
+# un branch e poi facciamo il rebase su origin/master. In questo modo il mantainer non
+# deve occuparsi dell'integrazione, ma è sufficiente un merge fast-forward.
+
+# applica le modifiche fatte sul branch server sopra al base branch (master)
+# con questo comando non importa fare il checkout come sopra
+git rebase master server
+git checkout master
+git merge server
+git branch -d server
+
+# NB: non fare rebase di commit che esistono fuori dal nostro repository e su cui le persone
+# possono aver basato il proprio lavoro.
+# Si fa il rebase de cambiamenti locali prima del push, per avere un risultato più pulito,
+# ma non si fa mai il rebase di qualcosa che è stato pushato.
+
+# cambia il commento degli ultimi n commit
+git rebase -i HEAD~N
+# cambiare pick con reword e salvare il file, dopo si aprirà un editor dove cambiare il messaggio
+
+--------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------
+git stash
+--------------------------------------------------------------------------------------------
+# salva le modifiche e ritorna allo stato dell'HEAD
+git stash
+
+# applica le modifiche salvate con stash
+git stash apply
+--------------------------------------------------------------------------------------------
+
+# rinomina un file
+git mv file_from file_to
+
+# elenco dei commit con hash
+git reflog
+
+# ricerca un termine nei file
+git grep "parola"
+
+
+
+
+
+
+
+
+
