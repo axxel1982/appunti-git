@@ -185,6 +185,27 @@ git commit --amend --no-edit
 
 
 --------------------------------------------------------------------------------------------
+git show
+--------------------------------------------------------------------------------------------
+# visualizza ultimo commit (HEAD)
+git show
+
+# visualizza un commit specifico
+git show <commit>
+
+# visualizza la revisione precedente di un file
+git show HEAD^:path/to/file
+
+# mostra la revisione di un file relativa ad un commit specifico
+git show 4234a69:test.txt
+
+# mostra l'oggetto a cui punta l'etichetta
+git show v1.0.0
+
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
 git reset - Come annullare un commit
 --------------------------------------------------------------------------------------------
 
@@ -214,6 +235,8 @@ git commit
 # Se la commit è già stata inviata a un repository remoto (push) è necessario revert
 # Questo comando crea una _nuova commit_ che annulla tutto ciò che è stato introdotto dalla 
 # commit indesiderata.
+
+# annulla ultima commit
 git revert HEAD
 
 # In Git HEAD è un puntatore alla commit più recente fatta sul branch.
@@ -308,6 +331,9 @@ git log --grep "modifica"
 # log con stringa di formattazione
 git log --pretty=format:"%h - %an, %ar : %s"
 
+# elenco di tutti i commit con hash (anche quelli resettati)
+git reflog
+
 # per andare alla fine del log
 SHIFT + g
 
@@ -357,7 +383,7 @@ git push
 git remote show <remote>
 
 # elenca i riferimenti di un repository remoto
-git help ls-remote
+git ls-remote
 
 # informazioni sul server remoto origin
 git remote show origin
@@ -590,6 +616,7 @@ git rebase -i HEAD~N
 
 --------------------------------------------------------------------------------------------
 
+
 --------------------------------------------------------------------------------------------
 git stash
 --------------------------------------------------------------------------------------------
@@ -600,20 +627,82 @@ git stash
 git stash apply
 --------------------------------------------------------------------------------------------
 
+
+--------------------------------------------------------------------------------------------
+Comandi interni di git
+--------------------------------------------------------------------------------------------
+# mostra il contenuto di un oggetto del repository
+git cat-file -p <hash>
+
+# mostra il tipo del file
+git cat-file -t <hash>
+
+# mostra il contenuto del tree che è puntato dall'ultimo commit del master branch
+git cat-file -p master^{tree}
+
+# crea un blob nel database
+echo 'test content' | git hash-object -w --stdin
+
+# crea un blob del file nel database
+git hash-object -w test.txt
+
+# mostra tutti i file nella cartella objects
+find .git/objects/ -type f
+
+# per aggiornare l'index
+git update-index --add --cacheinfo 100644 \
+
+# per scrivere un oggetto tree dall'index
+git write-tree
+
+# elenca il contenuto di un oggetto tree
+git ls-tree HEAD
+
+# mostra il cotenuto di HEAD
+git cat-file -p HEAD
+
+# crea un branch al commit indicato di nome test
+git update-ref refs/heads/test 1ab7ca
+
+# refspec (nel file .git/config)
+[remote "origin"]
+	url = https://github.com/schacon/simplegit-progit
+	fetch = +refs/heads/*:refs/remotes/origin/*
+
+# <src>:<dst>
+# <src> pattern for references on the remote side 
+# <dst> is where those references will be tracked locally
+
+# per fare il fetch del master remoto su origin/mymaster localmente
+git fetch origin master:refs/remotes/origin/mymaster
+
+# refspec multiplo
+[remote "origin"]
+	url = https://github.com/schacon/simplegit-progit
+	fetch = +refs/heads/master:refs/remotes/origin/master
+	fetch = +refs/heads/experiment:refs/remotes/origin/experiment
+
+# push del master locale su qa/master remoto
+git push origin master:refs/heads/qa/master
+
+# per impostare il push impostato sopra come default quando scriviamo "git push origin"
+[remote "origin"]
+	url = https://github.com/schacon/simplegit-progit
+	fetch = +refs/heads/*:refs/remotes/origin/*
+	push = refs/heads/master:refs/heads/qa/master
+
+# cancella il branch topic sul remoto
+git push origin :topic
+
+# cancella il branch topic sul remoto
+git push origin --delete topic
+
+
+--------------------------------------------------------------------------------------------
+
+
 # rinomina un file
 git mv file_from file_to
 
-# elenco dei commit con hash
-git reflog
-
 # ricerca un termine nei file
 git grep "parola"
-
-
-
-
-
-
-
-
-
